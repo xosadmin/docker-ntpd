@@ -1,17 +1,18 @@
-FROM alpine:latest
+FROM debian:bookworm-slim
 
-RUN apk update && \
-    apk add ca-certificates openntpd && \
-    apk add --update tzdata
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN rm -rf /var/cache/apk/*
+RUN apt update -y && \
+    apt install ntp -y
 
-RUN echo "listen on 0.0.0.0" >> /etc/ntpd.conf && \
-    echo "server 0.pool.ntp.org" >> /etc/ntpd.conf && \
-    echo "server 1.pool.ntp.org" >> /etc/ntpd.conf && \
-    echo "server 2.pool.ntp.org" >> /etc/ntpd.conf && \
-    echo "server 3.pool.ntp.org" >> /etc/ntpd.conf
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN echo "server 0.pool.ntp.org iburst" >> /etc/ntp.conf && \
+    echo "server 1.pool.ntp.org iburst" >> /etc/ntp.conf && \
+    echo "server 2.pool.ntp.org iburst" >> /etc/ntp.conf && \
+    echo "server 3.pool.ntp.org iburst" >> /etc/ntp.conf
 
 EXPOSE 123/udp
 
-CMD ["/usr/sbin/ntpd", "-v", "-d"]
+CMD ["/usr/sbin/ntpd", "-d"]
