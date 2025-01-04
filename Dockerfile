@@ -6,7 +6,7 @@ RUN apk update && \
 
 RUN rm -rf /var/cache/apk/*
 
-RUN echo "listen on *" >> /etc/ntpd.conf && \
+RUN echo "listen on 0.0.0.0" >> /etc/ntpd.conf && \
     echo "server 0.pool.ntp.org" >> /etc/ntpd.conf && \
     echo "server 1.pool.ntp.org" >> /etc/ntpd.conf && \
     echo "server 2.pool.ntp.org" >> /etc/ntpd.conf && \
